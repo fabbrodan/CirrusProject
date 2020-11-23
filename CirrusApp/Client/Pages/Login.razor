@@ -1,4 +1,5 @@
 ﻿@using System.ComponentModel.DataAnnotations
+@inject StateContainer Container
 @page "/login"
 <h3>Login</h3>
 
@@ -26,6 +27,7 @@
 
     private void SignIn()
     {
-        Console.WriteLine("userModel");
+        Container.SetProperty();
+        Console.WriteLine(Container.IsAuthenticated);
     }
 }
