@@ -1,0 +1,31 @@
+﻿@using System.ComponentModel.DataAnnotations
+@page "/login"
+<h3>Login</h3>
+
+<EditForm Model="@userModel" OnValidSubmit="@SignIn">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <InputText id="useremail" placeholder="E-Mail" @bind-Value="@userModel.Name"/>
+    <InputText type="password" id="userpassword" placeholder="Password" @bind-Value="@userModel.Password"/>
+    <button type="submit">Sign In</button>
+</EditForm>
+
+@code {
+
+    public class UserModel
+    {
+        [Required]
+        [StringLength(25, ErrorMessage = "Too Long address")]
+        public string Name { get; set; }
+        [Required]
+        [StringLength(25, ErrorMessage = "Not a valid password", MinimumLength = 5)]
+        public string Password { get; set; }
+    }
+
+    private UserModel userModel = new UserModel();
+
+    private void SignIn()
+    {
+        Console.WriteLine("userModel");
+    }
+}
