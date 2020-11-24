@@ -1,6 +1,9 @@
 ﻿@using System.ComponentModel.DataAnnotations
 @inject StateContainer Container
+@inject NavigationManager Nav
+@implements IDisposable
 @page "/login"
+
 <h3>Login</h3>
 
 <EditForm Model="@userModel" OnValidSubmit="@SignIn">
@@ -11,7 +14,12 @@
     <button type="submit">Sign In</button>
 </EditForm>
 
-@code {
+@code {        
+
+    protected override void OnInitialized()
+    {
+        Container.onChange += StateHasChanged;
+    }
 
     public class UserModel
     {
@@ -27,5 +35,11 @@
     {
         Container.SetProperty();
         Console.WriteLine(Container.IsAuthenticated);
+        Nav.NavigateTo("/");
+    }
+
+    public void Dispose()
+    {
+        Container.onChange -= StateHasChanged;
     }
 }

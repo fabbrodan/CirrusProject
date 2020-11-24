@@ -7,15 +7,17 @@ namespace CirrusApp.Client
 {
     public class StateContainer
     {
-        public bool IsAuthenticated { get; set; } = false;
+        private bool _isAuthenticated = false;
+        public bool IsAuthenticated { get { return this._isAuthenticated; } }
 
         public event Action onChange;
 
         public void SetProperty()
         {
-            IsAuthenticated = !IsAuthenticated;
+            _isAuthenticated = !_isAuthenticated;
+            StateChanged();
         }
 
-        private void NotifyStateChanged() => onChange?.Invoke();
+        private void StateChanged() => onChange?.Invoke();
     }
 }
