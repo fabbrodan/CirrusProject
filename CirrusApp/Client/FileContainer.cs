@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.CSharp.RuntimeBinder;
 
-namespace CirrusApp.Client
+namespace CirrusApp
 {
     public class FileContainer
     {
