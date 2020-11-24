@@ -1,7 +1,65 @@
-﻿@page "/files"
+﻿@using System.ComponentModel.DataAnnotations
+
+@inject FileContainer Files
+@implements IDisposable
+@page "/files"
 
 <h3>MyFiles</h3>
 
-@code {
+@foreach (FileModel file in Files.Files)
+{
+    <div class="row">
+        <div class="col-6">
+            <p>@file.FileName</p>
+        </div>
+        <div class="col-3">
+            <button class="btn btn-dark">Download</button>
+        </div>
+        <div class="col-3">
+            <button class="btn btn-danger">Delete</button>
+        </div>
+    </div>
+}
+
+<EditForm Model="@model" OnValidSubmit="@Upload">
+    <InputText id="filename" @bind-Value="@model.FileName" />
+    <button type="submit">Upload</button>
+</EditForm>
+
+@code { 
+
+    public class FileModel
+    {
+        [Required]
+        public string FileName { get; set; }
+    }
+
+    private FileModel model = new FileModel();
+
+    protected override void OnInitialized()
+    {
+        for(int i = 0; i < 5; i++)
+        {
+            Files.AddFile(
+                new FileModel{ FileName = i + ".jpg"}
+                );
+        }
+
+        Files.onChange += StateHasChanged;
+
+        base.OnInitialized();
+    }
+
+
+    private void Upload()
+    {
+        Files.AddFile(model);
+        model = new FileModel();
+    }
+
+    public void Dispose()
+    {
+        Files.onChange -= StateHasChanged;
+    }
 
 }
