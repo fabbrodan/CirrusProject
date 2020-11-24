@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace CirrusApp.Client
 {
-    public class StateContainer
+    public class AuthContainer
     {
         private bool _isAuthenticated = false;
         public bool IsAuthenticated { get { return this._isAuthenticated; } }

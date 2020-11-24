@@ -19,7 +19,7 @@ namespace CirrusApp.Client
 
             builder.Services
                 .AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) })
-                .AddSingleton<StateContainer>();
+                .AddSingleton<AuthContainer>();
 
             await builder.Build().RunAsync();
         }
