@@ -29,7 +29,7 @@ namespace cirrus_functions
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             Models.User User = JsonConvert.DeserializeObject<Models.User>(requestBody);
 
-            return new OkObjectResult(true);
+            return new OkObjectResult(User);
         }
     }
 }
