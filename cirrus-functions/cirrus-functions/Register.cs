@@ -24,7 +24,7 @@ namespace cirrus_functions
 
         [FunctionName("Register")]
         public async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequest req,
             ILogger log)
         {
             string body = await new StreamReader(req.Body).ReadToEndAsync();
