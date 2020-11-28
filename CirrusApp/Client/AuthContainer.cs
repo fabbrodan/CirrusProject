@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CirrusApp.Models;
 
 namespace CirrusApp
 {
@@ -9,6 +10,7 @@ namespace CirrusApp
     {
         private bool _isAuthenticated = false;
         public bool IsAuthenticated { get { return this._isAuthenticated; } }
+        public User user { get; set; }
 
         public event Action onChange;
 

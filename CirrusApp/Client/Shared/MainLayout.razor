@@ -1,4 +1,6 @@
 ﻿@inherits LayoutComponentBase
+@inject AuthContainer Auth
+@implements IDisposable
 
 <div class="sidebar">
     <NavMenu />    
@@ -6,8 +8,43 @@
 
 <div class="main">
     <div class="top-row px-4">
+        @if (Auth.IsAuthenticated)
+        {
+        <div class="col-2 offset-10" style="height: 85%">
+            <div class="row">
+                <div class="col-6">
+                    <p>@Auth.user.Email</p>
+                </div>
+                <div class="col-6">
+                    <a style="color: black" class="float-right" href="#" @onclick="SignOut">Sign Out</a>
+                </div>
+            </div>
+        </div>
+        }
     </div>
     <div class="content px-4">
         @Body
     </div>
 </div>
+
+@code {        
+
+    protected override void OnInitialized()
+    {
+        Auth.onChange += StateHasChanged;
+        base.OnInitialized();
+    }
+
+    private void SignOut()
+    {
+        Auth.SetProperty();
+        Auth.user = null;
+
+    }
+
+    public void Dispose()
+    {
+        Auth.onChange -= StateHasChanged;
+    }
+
+}
