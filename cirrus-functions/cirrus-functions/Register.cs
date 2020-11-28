@@ -24,9 +24,11 @@ namespace cirrus_functions
 
         [FunctionName("Register")]
         public async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequest req,
             ILogger log)
         {
+            log.LogInformation("Register function called");
+
             string body = await new StreamReader(req.Body).ReadToEndAsync();
             Models.User newUser = JsonConvert.DeserializeObject<Models.User>(body);
 
