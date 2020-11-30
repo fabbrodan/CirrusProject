@@ -1,8 +1,9 @@
 ﻿@using System.ComponentModel.DataAnnotations
-
+@using Microsoft.AspNetCore.Authorization
 @inject FileContainer Files
 @implements IDisposable
 @page "/files"
+@attribute [Authorize]
 
 <h3>MyFiles</h3>
 

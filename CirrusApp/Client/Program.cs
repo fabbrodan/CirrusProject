@@ -1,11 +1,8 @@
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace CirrusApp
@@ -19,8 +16,15 @@ namespace CirrusApp
 
             builder.Services
                 .AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) })
-                .AddSingleton<AuthContainer>()
-                .AddSingleton<FileContainer>();
+                .AddSingleton<FileContainer>()
+                .AddOidcAuthentication(options =>
+                {
+                    options.ProviderOptions.Authority = "https://accounts.google.com/";
+                    options.ProviderOptions.RedirectUri = "https://localhost:5001/authentication/login-callback";
+                    options.ProviderOptions.PostLogoutRedirectUri = "https://localhost:5001/authentication/logout-callback";
+                    options.ProviderOptions.ClientId = "467519146557-m0e5gligcq66j7av84p39mrdqrjufk3a.apps.googleusercontent.com";
+                    options.ProviderOptions.ResponseType = "id_token";
+                });
 
             await builder.Build().RunAsync();
         }

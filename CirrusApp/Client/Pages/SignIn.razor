@@ -1,53 +1,11 @@
 ﻿@using System.ComponentModel.DataAnnotations
 @using CirrusApp.Models
-@inject AuthContainer Container
-@inject NavigationManager Nav
-@implements IDisposable
 @page "/signin"
 
-<h3>Login</h3>
+    <h3>Login</h3>
 
-<div style="border: solid">
-    <EditForm Model="@user" OnValidSubmit="@Signin">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
-        <InputText id="useremail" placeholder="E-Mail" @bind-Value="@user.Email" />
-        <InputText type="password" id="userpassword" placeholder="Password" @bind-Value="@Password" />
-        <button class="btn btn-dark" type="submit">Sign In</button>
-    </EditForm>
-</div>
-<div>
-    <div class="row">
-        <div class="col-4">
-            <div class="g-signin2" data-onsuccess="onSignIn()"></div>
-        </div>
-    </div>
-</div>
+    <a href="authentication/login">Sign In with Google</a>
 
-@code {
+    @code {
 
-    protected override void OnInitialized()
-    {
-        Container.onChange += StateHasChanged;
     }
-
-    private User user = new User();
-    private string Password;
-
-    private void onSignIn()
-    {
-        Console.WriteLine("Google Sign in submitted");
-    }
-
-    private void Signin()
-    {
-        Container.SetProperty();
-        Container.user = new User { Email = user.Email };
-        Nav.NavigateTo("/");
-    }
-
-    public void Dispose()
-    {
-        Container.onChange -= StateHasChanged;
-    }
-}
