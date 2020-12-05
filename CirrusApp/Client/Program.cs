@@ -22,7 +22,7 @@ namespace CirrusApp
                     options.ProviderOptions.Authority = "https://accounts.google.com/";
                     options.ProviderOptions.RedirectUri = "https://localhost:5001/authentication/login-callback";
                     options.ProviderOptions.PostLogoutRedirectUri = "https://localhost:5001/authentication/logout-callback";
-                    options.ProviderOptions.ClientId = "467519146557-m0e5gligcq66j7av84p39mrdqrjufk3a.apps.googleusercontent.com";
+                    options.ProviderOptions.ClientId = "467519146557-2tiael1k63lbh1luvgnjf21ccvtncicp.apps.googleusercontent.com";
                     options.ProviderOptions.ResponseType = "id_token";
                 });
 

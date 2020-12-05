@@ -3,29 +3,33 @@
 @inject FileContainer Files
 @implements IDisposable
 @page "/files"
-@attribute [Authorize]
 
-<h3>MyFiles</h3>
+<AuthorizeView>
+    <Authorized>
+        <div class="card-deck">
+            @foreach (CategoryModel category in categories)
+            {
+                <div class="card">
+                    <div class="card-header">
+                        <h5>@category.CategoryName</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul>
+                            @foreach(FileModel file in Files.Files.Where(f => f.Category.CategoryId == category.CategoryId))
+                            {
+                                <li>@file.FileName</li>
+                            }
+                        </ul>
+                    </div>
+                </div>
 
-@foreach (FileModel file in Files.Files)
-{
-    <div class="row">
-        <div class="col-6">
-            <p>@file.FileName</p>
+            }
         </div>
-        <div class="col-3">
-            <button class="btn btn-dark">Download</button>
-        </div>
-        <div class="col-3">
-            <button class="btn btn-danger">Delete</button>
-        </div>
-    </div>
-}
-
-<EditForm Model="@model" OnValidSubmit="@Upload">
-    <InputText id="filename" @bind-Value="@model.FileName" />
-    <button type="submit">Upload</button>
-</EditForm>
+    </Authorized>
+    <NotAuthorized>
+        <Unauthorized />
+    </NotAuthorized>
+</AuthorizeView>
 
 @code { 
 
@@ -33,17 +37,39 @@
     {
         [Required]
         public string FileName { get; set; }
+        public CategoryModel Category { get; set; }
+    }
+
+    public class CategoryModel
+    {
+        [Required]
+        public int CategoryId { get; set; }
+        public string CategoryName { get; set; }
     }
 
     private FileModel model = new FileModel();
+    private List<CategoryModel> categories = new List<CategoryModel>();
 
     protected override void OnInitialized()
     {
+        for (int i = 0; i < 3; i++)
+        {
+            categories.Add(
+                new CategoryModel {
+                    CategoryId = i,
+                    CategoryName = "Category_" + i
+                });
+        }
+
         for(int i = 0; i < 5; i++)
         {
+            Random rnd = new Random();
             Files.AddFile(
-                new FileModel{ FileName = i + ".jpg"}
-                );
+                new FileModel
+                {
+                    FileName = i + ".jpg",
+                    Category = categories[rnd.Next(0, 3)]
+                });
         }
 
         Files.onChange += StateHasChanged;

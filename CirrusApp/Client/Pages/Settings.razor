@@ -1,6 +1,13 @@
 ﻿@page "/settings"
 
-<h3>Settings</h3>
+<AuthorizeView>
+    <Authorized>
+        <h4>here are your settings</h4>
+    </Authorized>
+    <NotAuthorized>
+        <Unauthorized />
+    </NotAuthorized>
+</AuthorizeView>
 
 @code {
 
