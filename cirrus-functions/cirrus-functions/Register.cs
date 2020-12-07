@@ -4,23 +4,18 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.Azure.Cosmos;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using cirrus_functions.Models;
+using Microsoft.Azure.Cosmos;
 
 namespace cirrus_functions
 {
     public class Register
     {
-        private readonly CosmosDbService CosmosService;
-        private readonly PasswordHasher Hasher;
-        public Register(CosmosDbService DbService)
-        {
-            CosmosService = DbService;
-            Hasher = new PasswordHasher();
-        }
+        private readonly CosmosDbService CosmosService = new CosmosDbService();
+        private readonly PasswordHasher Hasher = new PasswordHasher();
 
         [FunctionName("Register")]
         public async Task<IActionResult> Run(
@@ -34,6 +29,7 @@ namespace cirrus_functions
 
             newUser.PasswordSalt = Hasher.RandomSalt;
             newUser.Password = Hasher.GenerateSaltedHash(newUser.Password);
+            newUser.UserRegistered = DateTime.UtcNow;
 
             ItemResponse<Models.User> response = await CosmosService.CosmosContainer.CreateItemAsync(newUser);
 

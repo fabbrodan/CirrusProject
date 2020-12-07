@@ -10,5 +10,6 @@ namespace cirrus_functions.Models
         public string Lastname { get; set; }
         public string Password { get; set; }
         public string PasswordSalt { get; set; }
+        public DateTime UserRegistered { get; set; }
     }
 }

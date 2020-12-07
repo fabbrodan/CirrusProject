@@ -13,12 +13,7 @@ namespace cirrus_functions
 {
     public class SignIn
     {
-        private readonly CosmosDbService _dbService;
-
-        public SignIn(CosmosDbService CosmosDbService)
-        {
-            _dbService = CosmosDbService;
-        }
+        private readonly CosmosDbService CosmosService = new CosmosDbService();
 
         [FunctionName("SignIn")]
         public static async Task<IActionResult> Run(

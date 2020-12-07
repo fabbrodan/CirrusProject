@@ -1,11 +1,31 @@
 ﻿@using System.ComponentModel.DataAnnotations
-@using CirrusApp.Models
+@using CirrusApp.Models.Account
+@using Newtonsoft.Json
 @page "/signin"
 
     <h3>Login</h3>
 
-    <a href="authentication/login">Sign In with Google</a>
+    <EditForm Model="@user" OnValidSubmit="Login">
+        <DataAnnotationsValidator/>
+        <div class="form-group">
+            <InputText @bind-Value="user.Email" placeholder="Email" class="form-control"/>
+            <ValidationMessage For="@(() => user.Email)"/>
+        </div>
+        <div class="form-group">
+            <InputText @bind-Value="user.Password" type="password" placeholder="Password" class="form-control"/>
+            <ValidationMessage For="@(() => user.Password)"/>
+        </div>
+        <div class="form-group">
+            <button class="btn btn-primary">Sign In</button>
+        </div>
+    </EditForm>
+    <!--<a href="authentication/login">Sign In with Google</a>-->
 
     @code {
+        private SignInUser user = new SignInUser();
 
+        private void Login()
+        {
+            Console.WriteLine(JsonConvert.SerializeObject(user));
+        }
     }
