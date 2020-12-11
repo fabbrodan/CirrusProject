@@ -11,6 +11,7 @@ namespace CirrusApp.Models.Account
         [Required]
         public string Email { get; set; }
         [Required]
+        [MinLength(7, ErrorMessage = "Password must be at least 7 characters long.")]
         public string Password { get; set; }
     }
 }
