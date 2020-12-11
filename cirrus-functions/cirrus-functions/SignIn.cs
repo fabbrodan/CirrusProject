@@ -16,15 +16,20 @@ namespace cirrus_functions
         private readonly CosmosDbService CosmosService = new CosmosDbService();
 
         [FunctionName("SignIn")]
-        public static async Task<IActionResult> Run(
+        public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequest req,
             ILogger log)
         {
-
+            PartitionKey key = new PartitionKey("/user/email");
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             Models.User User = JsonConvert.DeserializeObject<Models.User>(requestBody);
+            Models.User dbUser = CosmosService.CosmosContainer.ReadItemAsync<Models.User>(User.Email, key, null).Result;
+            if (dbUser != null)
+            {
+                return new OkObjectResult(dbUser);
+            }
 
-            return new OkObjectResult(User);
+            return new NoContentResult();
         }
     }
 }

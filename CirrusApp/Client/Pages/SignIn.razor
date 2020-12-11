@@ -1,31 +1,116 @@
 ﻿@using System.ComponentModel.DataAnnotations
 @using CirrusApp.Models.Account
 @using Newtonsoft.Json
+@inject HttpClient Http
+
 @page "/signin"
 
     <h3>Login</h3>
 
-    <EditForm Model="@user" OnValidSubmit="Login">
-        <DataAnnotationsValidator/>
-        <div class="form-group">
-            <InputText @bind-Value="user.Email" placeholder="Email" class="form-control"/>
-            <ValidationMessage For="@(() => user.Email)"/>
-        </div>
-        <div class="form-group">
-            <InputText @bind-Value="user.Password" type="password" placeholder="Password" class="form-control"/>
-            <ValidationMessage For="@(() => user.Password)"/>
-        </div>
-        <div class="form-group">
-            <button class="btn btn-primary">Sign In</button>
-        </div>
-    </EditForm>
-    <!--<a href="authentication/login">Sign In with Google</a>-->
+    <div class="@display">
+        <EditForm Model="@user" OnValidSubmit="Login">
+            <DataAnnotationsValidator />
+            <div class="form-group">
+                <InputText @bind-Value="user.Email" placeholder="Email" class="form-control" />
+                <ValidationMessage For="@(() => user.Email)" />
+            </div>
+            <div class="form-group">
+                <InputText @bind-Value="user.Password" type="password" placeholder="Password" class="form-control" />
+                <ValidationMessage For="@(() => user.Password)" />
+            </div>
+            <div class="form-group">
+                <button class="btn btn-primary">Sign In</button>
+            </div>
+        </EditForm>
+    </div>
+
+    <div class="row">
+        <button class="btn btn-primary" @onclick="@ToggleRegister">@registerToggleText</button>
+    </div>
+
+    <div class="@dont_display">
+        <EditForm Model="@registerUser" OnValidSubmit="Register">
+            <DataAnnotationsValidator/>
+            <div class="form-group">
+                <InputText @bind-Value="registerUser.Email" placeholder="Email" class="form-control"/>
+                <ValidationMessage For="@(() => registerUser.Email)"/>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-6">
+                        <InputText @bind-Value="registerUser.Firstname" placeholder="Firstname" class="form-control" />
+                        <ValidationMessage For="@(() => registerUser.Firstname)" />
+                    </div>
+                    <div class="col-6">
+                        <InputText @bind-Value="registerUser.Lastname" placeholder="Surname" class="form-control" />
+                        <ValidationMessage For="@(() => registerUser.Lastname)" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <InputText @bind-Value="registerUser.Password" placeholder="Password" class="form-control" type="password" />
+                <ValidationMessage For="@(() => registerUser.Password)" />
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-dark">Submit</button>
+            </div>
+        </EditForm>
+    </div>
 
     @code {
-        private SignInUser user = new SignInUser();
 
-        private void Login()
+        private bool signIn = true;
+        private string display = "display";
+        private string dont_display = "dont-display";
+
+        private string registerToggleText = "Sign Up!";
+
+        private SignInUser user = new SignInUser();
+        private RegisterUser registerUser = new RegisterUser();
+        private string BaseAddress = "https://cirrus-cloud-apim.azure-api.net/cirrus-functions";
+
+        private void ToggleRegister()
         {
-            Console.WriteLine(JsonConvert.SerializeObject(user));
+            if (signIn)
+            {
+                display = "dont-display";
+                dont_display = "display";
+                signIn = !signIn;
+                registerToggleText = "Sign In!";
+            }
+            else
+            {
+                display = "display";
+                dont_display = "dont-display";
+                signIn = !signIn;
+                registerToggleText = "Sign Up!";
+            }
+        }
+
+        private async Task Login()
+        {
+            var requestMessage = new HttpRequestMessage()
+            {
+                Method = new HttpMethod("POST"),
+                RequestUri = new Uri(BaseAddress + "/Signin"),
+                Content = new StringContent(JsonConvert.SerializeObject(user))
+            };
+
+            var result = await Http.SendAsync(requestMessage);
+            Console.WriteLine(result.Content);
+        }
+
+        private async Task Register()
+        {
+            var requestMessage = new HttpRequestMessage()
+            {
+                Method = new HttpMethod("POST"),
+                RequestUri = new Uri(BaseAddress + "/Register"),
+                Content = new StringContent(JsonConvert.SerializeObject(registerUser))
+            };
+
+        var result = await Http.SendAsync(requestMessage);
+
+        Console.WriteLine(result.Content);
         }
     }

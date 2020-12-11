@@ -26,7 +26,7 @@ namespace cirrus_functions
 
             string body = await new StreamReader(req.Body).ReadToEndAsync();
             Models.User newUser = JsonConvert.DeserializeObject<Models.User>(body);
-
+            newUser.id = newUser.Email;
             newUser.PasswordSalt = Hasher.RandomSalt;
             newUser.Password = Hasher.GenerateSaltedHash(newUser.Password);
             newUser.UserRegistered = DateTime.UtcNow;
